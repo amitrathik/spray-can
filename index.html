@@ -16,19 +16,9 @@
 
             img.src = 'http://i.imgur.com/w1yg6qo.jpg';
             img.onload = function() {
-                var v = 100,
-                dx = 1.75;
+                var v = 10;
                 
-                //fuzz();
-                function fuzz(){
-                    v -= dx;
-                    //pixelate(v);
-                    //if(v > 5)
-                        //requestAnimationFrame(fuzz);
-
-                }
-                
-                pixelate();
+                pixelate(v);
             };
             
             function pixelate(v) {
@@ -44,30 +34,27 @@
             }
             
             function mouseoverHandler(e) {
-                var pos = getMousePos(canvas, e);
-                posx = pos.x;
-                posy = pos.y;
-                ctx.fillStyle = "#000000";
-                ctx.fillRect(posx, posy, 4, 4);
+                const cursorX = event.clientX - canvas.getBoundingClientRect().left;
+                const cursorY = event.clientY - canvas.getBoundingClientRect().top;
+                console.log(cursorX, cursorY)
+                ctx.imageSmoothingEnabled = true;
+                // ctx.clearRect(0, 0, canvas.width, canvas.height);
+                // ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                const radius = 1; // Adjust this value to control the smoothing area size
+                // ctx.filter = "blur(20px)"; // Adjust this value for smoothing effect
+
+                ctx.drawImage(img, cursorX - 50, cursorY - 50, canvas.height, canvas.width, cursorX - 50, cursorY - 50, canvas.height, canvas.width);
+
+                ctx.filter = "none";
+                // ctx.fillStyle = "#000000";
+                // ctx.fillRect(cursorX, cursorY, 10, 10);
             }
             
-            function getMousePos(evt) {
-                var rect = canvas.getBoundingClientRect();
-                return {
-                    x: (evt.clientX - rect.left) / (rect.right - rect.left) * canvas.width,
-                    y: (evt.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height
-                };
-            }
             
             canvas.addEventListener('mousemove', mouseoverHandler, false);
             //window.addEventListener('mousemove', draw, false);
             //canvas.addEventListener('mouseout', mouseoutHandler, false);
-
-            window.requestAnimationFrame = (function () {
-                return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
-                    window.setTimeout(callback, 1000 / 60);
-                };
-            })();
 
         </script>
     </body>
